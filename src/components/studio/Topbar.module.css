@@ -1,0 +1,96 @@
+.bar {
+  grid-area: top;
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 16px 0 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+/* The open photo, between the logo and the buttons: it takes the space left over and shortens its name, so it never overlaps them. */
+.file {
+  flex: 0 1 380px;
+  min-width: 0;
+  margin: 0 auto;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: var(--fill-1);
+  border: 1px solid var(--line);
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+.file b {
+  min-width: 0;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.file > span:last-child {
+  flex: none;
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+}
+.fileDot {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--ok);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 22%, transparent);
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.divider {
+  width: 1px;
+  height: 24px;
+  margin: 0 6px;
+  background: var(--line-2);
+}
+
+.label {
+  display: inline;
+}
+
+@media (max-width: 1280px) {
+  .file {
+    display: none;
+  }
+}
+
+@media (max-width: 899px) {
+  .bar {
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 560px) {
+  .bar {
+    gap: 8px;
+  }
+  .right {
+    gap: 2px;
+  }
+  .divider {
+    margin: 0 3px;
+  }
+  .label {
+    display: none;
+  }
+  .right .compact {
+    width: 40px;
+    padding: 0;
+  }
+}

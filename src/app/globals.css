@@ -1,0 +1,232 @@
+/* ── Design tokens ─────────────────────────────────────────────────────────
+   One navy-and-sky identity in two modes. Dark is the default (deep navy screens, sky-blue accent, the photo on
+   a near-black stage); light swaps in cool off-white screens and a blue-to-navy accent. The mode is the
+   data-theme attribute on <html> (set before first paint by the script in layout.tsx, switched by ThemeToggle).
+   Everything that uses colour reads these variables; the mobile app's src/theme.ts mirrors them. */
+:root {
+  color-scheme: dark;
+
+  --font-ui: var(--font-sans), 'Segoe UI Variable', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --font-display: var(--font-head), var(--font-ui);
+
+  --grad: linear-gradient(120deg, #86d6ff 0%, #4cb8ff 50%, #2b86f5 100%);
+  --grad-soft: linear-gradient(120deg, rgba(134, 214, 255, 0.18), rgba(76, 184, 255, 0.1) 55%, rgba(43, 134, 245, 0.04));
+  --on-grad: #06142e;
+
+  --bg: #0a1020;
+  --canvas: #060b18;
+  --surface: #111a33;
+  --surface-2: #16213f;
+  --glow-1: rgba(76, 184, 255, 0.1);
+  --glow-2: rgba(43, 134, 245, 0.12);
+  --dot: rgba(255, 255, 255, 0.06);
+
+  --glass: rgba(17, 26, 51, 0.9);
+  --glass-strong: #111a33;
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --shadow-float: 0 18px 44px -18px rgba(0, 0, 0, 0.7), 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-photo: 0 24px 60px -28px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.07);
+
+  --fill-1: rgba(255, 255, 255, 0.04);
+  --fill-2: rgba(255, 255, 255, 0.07);
+  --fill-3: rgba(255, 255, 255, 0.13);
+  --raised: #1c2a4d;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-2: rgba(255, 255, 255, 0.14);
+
+  --text: #f1f5ff;
+  --text-2: #a9b6d6;
+  --text-3: #7384a8;
+
+  --accent: #4cb8ff;
+  --accent-2: #86d6ff;
+  --accent-soft: rgba(76, 184, 255, 0.14);
+  --accent-line: rgba(76, 184, 255, 0.5);
+
+  --ok: #34d399;
+  --warn: #fbbf24;
+  --danger: #fb7185;
+
+  --scrim: rgba(2, 6, 18, 0.62);
+  --knob: #ffffff;
+  --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --logo-shadow: 0 8px 22px -8px rgba(76, 184, 255, 0.45);
+
+  --radius-xl: 24px;
+  --radius-lg: 18px;
+  --radius: 14px;
+  --radius-sm: 10px;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --focus: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --grad: linear-gradient(120deg, #2f8cf0 0%, #1f6fe0 50%, #0a2c73 100%);
+  --grad-soft: linear-gradient(120deg, rgba(76, 184, 255, 0.18), rgba(31, 111, 224, 0.1) 55%, rgba(10, 44, 115, 0.04));
+  --on-grad: #ffffff;
+
+  --bg: #f2f6fc;
+  --canvas: #e1eaf6;
+  --surface: #ffffff;
+  --surface-2: #e8f0fa;
+  --glow-1: rgba(31, 111, 224, 0.07);
+  --glow-2: rgba(76, 184, 255, 0.07);
+  --dot: rgba(10, 40, 110, 0.08);
+
+  --glass: rgba(255, 255, 255, 0.92);
+  --glass-strong: #ffffff;
+  --glass-border: rgba(10, 30, 80, 0.1);
+  --shadow-float: 0 18px 44px -18px rgba(10, 35, 100, 0.3), 0 2px 8px rgba(10, 35, 100, 0.08);
+  --shadow-photo: 0 24px 60px -28px rgba(10, 35, 100, 0.45), 0 0 0 1px rgba(10, 40, 110, 0.07);
+
+  --fill-1: rgba(10, 40, 110, 0.04);
+  --fill-2: rgba(10, 40, 110, 0.07);
+  --fill-3: rgba(10, 40, 110, 0.13);
+  --raised: #ffffff;
+  --line: rgba(10, 40, 110, 0.09);
+  --line-2: rgba(10, 40, 110, 0.14);
+
+  --text: #0a1a3f;
+  --text-2: #3f5078;
+  --text-3: #74839f;
+
+  --accent: #1f6fe0;
+  --accent-2: #4cb8ff;
+  --accent-soft: rgba(31, 111, 224, 0.12);
+  --accent-line: rgba(31, 111, 224, 0.45);
+
+  --ok: #12a679;
+  --warn: #d98a00;
+  --danger: #e5484d;
+
+  --scrim: rgba(10, 26, 63, 0.5);
+  --card-shadow: 0 1px 2px rgba(10, 40, 110, 0.06);
+  --logo-shadow: 0 8px 20px -8px rgba(10, 44, 115, 0.55);
+}
+
+/* Lets the hero's before/after demo animate its split position. */
+@property --split {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 50%;
+}
+
+/* The stage publishes how much of it overlays cover. Registering them as lengths makes
+   getComputedStyle return resolved pixels (not the raw calc()), which the viewer reads to centre the photo. */
+@property --inset-top {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+@property --inset-right {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+@property --inset-bottom {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+@property --inset-left {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+/* ── Base ──────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+h1,
+h2,
+h3,
+p,
+figure {
+  margin: 0;
+}
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+}
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+svg {
+  display: block;
+}
+::selection {
+  background: rgba(31, 111, 224, 0.25);
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(10, 40, 110, 0.18);
+  border-radius: 10px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(10, 40, 110, 0.3);
+}
+[hidden] {
+  display: none !important;
+}
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+  border-radius: 10px;
+}
+
+/* Translucent surface for things that float over the photo (zoom bar, progress, toasts). */
+.glass {
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-float);
+}
+
+/* Text filled with the signature gradient. */
+.gradText {
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

@@ -1,0 +1,535 @@
+/* ── Buttons. Primary carries the signature gradient. ──────────────────── */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--fill-2);
+  color: var(--text);
+  font: inherit;
+  font-weight: 560;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.12s var(--ease), box-shadow 0.15s ease, opacity 0.15s ease, filter 0.15s ease;
+}
+.button:hover:not(:disabled) {
+  background: var(--fill-3);
+}
+.button:active:not(:disabled) {
+  transform: scale(0.975);
+}
+.button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.button:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+}
+.primary {
+  background: var(--grad);
+  border-color: transparent;
+  color: var(--on-grad);
+  font-weight: 600;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 10px 26px -12px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+.primary:hover:not(:disabled) {
+  background: var(--grad);
+  filter: brightness(1.06) saturate(1.05);
+}
+.secondary {
+  background: var(--fill-2);
+}
+.ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--text-2);
+}
+.ghost:hover:not(:disabled) {
+  background: var(--fill-2);
+  color: var(--text);
+}
+.danger {
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+  border-color: color-mix(in srgb, var(--danger) 28%, transparent);
+  color: var(--danger);
+}
+.danger:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--danger) 16%, transparent);
+}
+.sm {
+  height: 36px;
+  padding: 0 14px;
+  font-size: 13px;
+}
+.md {
+  font-size: 14px;
+}
+.lg {
+  height: 52px;
+  padding: 0 24px;
+  font-size: 15.5px;
+  border-radius: 14px;
+}
+.block {
+  width: 100%;
+}
+.icon {
+  width: 17px;
+  height: 17px;
+  flex: none;
+}
+
+.iconButton {
+  display: inline-grid;
+  place-items: center;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  flex: none;
+}
+.iconButton:hover:not(:disabled) {
+  background: var(--fill-2);
+  color: var(--text);
+}
+.iconButton:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.iconButton:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+}
+.icon_md {
+  width: 38px;
+  height: 38px;
+}
+.icon_sm {
+  width: 32px;
+  height: 32px;
+}
+.icon_sm svg,
+.icon_md svg {
+  width: 17px;
+  height: 17px;
+}
+.iconActive {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* ── Segmented control ─────────────────────────────────────────────────── */
+.segmented {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 12px;
+  background: var(--fill-1);
+  border: 1px solid var(--line);
+}
+.blockFill {
+  display: flex;
+  width: 100%;
+}
+.segment {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--text-2);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 560;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.2s ease, box-shadow 0.2s ease;
+  white-space: nowrap;
+}
+.segment:hover:not(:disabled) {
+  color: var(--text);
+}
+.segment:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.segment:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+}
+.segmentActive {
+  background: var(--raised);
+  color: var(--text);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18), 0 4px 12px -6px rgba(0, 0, 0, 0.35);
+}
+
+/* ── Switch rows. Neighbouring rows merge into one grouped list. ───────── */
+.switchRow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 14px 13px 16px;
+  border-radius: var(--radius);
+  background: var(--fill-1);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.switchRow:hover {
+  background: var(--fill-2);
+}
+.switchRow:has(+ .switchRow) {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+/* Pull the next row up to leave a 1px hairline (the section gap is 8px). */
+.switchRow + .switchRow {
+  margin-top: -7px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+.switchRow.disabled,
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.switchText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+.switchText strong {
+  font-size: 13.5px;
+  font-weight: 580;
+}
+.switchText small {
+  color: var(--text-3);
+  font-size: 12px;
+  margin-top: 1px;
+  line-height: 1.4;
+}
+.switchInput {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+.track {
+  position: relative;
+  width: 42px;
+  height: 26px;
+  flex: none;
+  border-radius: 999px;
+  background: var(--fill-3);
+  transition: background 0.2s ease;
+}
+.thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--knob);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35), 0 0 0 0.5px rgba(0, 0, 0, 0.06);
+  transition: transform 0.22s var(--ease);
+}
+.switchInput:checked ~ .track {
+  background: var(--grad);
+}
+.switchInput:checked ~ .track .thumb {
+  transform: translateX(16px);
+}
+.switchInput:focus-visible ~ .track {
+  box-shadow: var(--focus);
+}
+
+/* ── Slider. Signed sliders fill from the centre. ──────────────────────── */
+.slider {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 5px 0;
+}
+.sliderHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.sliderHead label {
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.changed .sliderHead label {
+  color: var(--text);
+}
+.sliderValue {
+  min-width: 38px;
+  color: var(--text-3);
+  font-size: 12.5px;
+  font-weight: 560;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.changed .sliderValue {
+  color: var(--accent);
+}
+.range {
+  --lo: 0%;
+  --hi: 50%;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 22px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.range::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--fill-3) var(--lo), var(--accent) var(--lo) var(--hi), var(--fill-3) var(--hi));
+}
+.range::-moz-range-track {
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--fill-3) var(--lo), var(--accent) var(--lo) var(--hi), var(--fill-3) var(--hi));
+}
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  margin-top: -7px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--knob);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4), 0 0 0 0.5px rgba(0, 0, 0, 0.08);
+  transition: transform 0.15s var(--ease);
+}
+.range:hover::-webkit-slider-thumb,
+.range:active::-webkit-slider-thumb {
+  transform: scale(1.15);
+}
+.range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--knob);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+.range:focus-visible {
+  outline: none;
+}
+.range:focus-visible::-webkit-slider-thumb {
+  box-shadow: var(--focus);
+}
+.range:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.ends {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-3);
+  font-size: 11.5px;
+}
+
+/* ── Section: hairline-separated groups, not boxes inside boxes. ───────── */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+}
+.section:first-child {
+  border-top: 0;
+  padding-top: 6px;
+}
+.sectionHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.sectionHead h3 {
+  font-size: 13.5px;
+  font-weight: 620;
+  letter-spacing: -0.005em;
+}
+.sectionHead p {
+  margin-top: 2px;
+  color: var(--text-3);
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+.sectionBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── Notice & badge ────────────────────────────────────────────────────── */
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  background: var(--fill-1);
+  color: var(--text-2);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.noticeIcon {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  margin-top: 1px;
+  color: var(--text-3);
+}
+.notice_ok {
+  background: color-mix(in srgb, var(--ok) 9%, transparent);
+}
+.notice_ok .noticeIcon {
+  color: var(--ok);
+}
+.notice_warn {
+  background: color-mix(in srgb, var(--warn) 10%, transparent);
+}
+.notice_warn .noticeIcon {
+  color: var(--warn);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 26px;
+  padding: 0 11px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 560;
+  background: var(--fill-1);
+  border: 1px solid var(--line);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.badge_ok::before,
+.badge_warn::before,
+.badge_accent::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.badge_accent {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: var(--accent-line);
+}
+.badge_ok {
+  color: var(--ok);
+}
+.badge_warn {
+  color: var(--warn);
+}
+
+/* ── Toasts: one glass capsule, bottom centre. ─────────────────────────── */
+.toasts {
+  position: fixed;
+  left: 50%;
+  bottom: 96px;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+  max-width: min(460px, calc(100vw - 32px));
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 10px 10px 16px;
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.4;
+  pointer-events: auto;
+  animation: toastIn 0.3s var(--ease);
+}
+.toast > svg {
+  width: 17px;
+  height: 17px;
+  flex: none;
+}
+.toastText {
+  flex: 1;
+}
+.toastClose {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-3);
+  cursor: pointer;
+}
+.toastClose:hover {
+  background: var(--fill-2);
+  color: var(--text);
+}
+.toastClose svg {
+  width: 14px;
+  height: 14px;
+}
+.toast_ok > svg {
+  color: var(--ok);
+}
+.toast_error > svg {
+  color: var(--danger);
+}
+.toast_info > svg {
+  color: var(--accent);
+}
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+}
+
+@media (max-width: 899px) {
+  .toasts {
+    top: 70px;
+    bottom: auto;
+  }
+  .toast {
+    border-radius: 20px;
+  }
+}

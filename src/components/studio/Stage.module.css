@@ -1,0 +1,323 @@
+/* The canvas between the rail and the inspector. `--inset-*` say how much of it overlays cover
+   (the zoom bar at the bottom); the viewer reads them to centre the photo in the clear area. */
+
+.stage {
+  --inset-top: 0px;
+  --inset-right: 0px;
+  --inset-bottom: 0px;
+  --inset-left: 0px;
+  /* Horizontal centre of the clear area. */
+  --clear-centre: calc(var(--inset-left) + (100% - var(--inset-left) - var(--inset-right)) / 2);
+
+  grid-area: stage;
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  touch-action: none;
+  cursor: grab;
+  background:
+    radial-gradient(900px 520px at 20% 0%, var(--glow-1), transparent 65%),
+    radial-gradient(800px 520px at 100% 100%, var(--glow-2), transparent 60%),
+    radial-gradient(var(--dot) 1px, transparent 1.4px) 0 0 / 22px 22px,
+    var(--canvas);
+}
+.withPanels {
+  --inset-bottom: var(--bottom);
+}
+.stage:global(.is-panning) {
+  cursor: grabbing;
+}
+
+.art {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  transform-origin: 0 0;
+  will-change: transform;
+  border-radius: 4px;
+  box-shadow: var(--shadow-photo);
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 4px;
+}
+
+.paint {
+  cursor: crosshair;
+  opacity: 0.55;
+}
+
+/* ── Before / after split ──────────────────────────────────────────────── */
+.split {
+  position: absolute;
+  top: var(--inset-top);
+  bottom: var(--inset-bottom);
+  left: 0;
+  width: 0;
+  z-index: 2;
+  cursor: ew-resize;
+  display: none;
+}
+.split::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -18px;
+  width: 36px;
+}
+.splitLine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -1px;
+  width: 2px;
+  border-radius: 2px;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12), 0 0 14px rgba(0, 0, 0, 0.45);
+}
+.splitKnob {
+  position: absolute;
+  top: 50%;
+  left: -22px;
+  width: 44px;
+  height: 44px;
+  margin-top: -22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: #17140d;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+  transition: transform 0.15s var(--ease);
+}
+.split:active .splitKnob {
+  transform: scale(1.08);
+}
+.splitKnob svg {
+  width: 18px;
+  height: 18px;
+}
+.splitTag {
+  position: absolute;
+  top: 14px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgba(12, 12, 13, 0.6);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.tagLeft {
+  right: 14px;
+}
+.tagRight {
+  left: 14px;
+}
+
+/* ── Progress card ─────────────────────────────────────────────────────── */
+.busy {
+  position: absolute;
+  top: calc(var(--inset-top) + 6px);
+  left: var(--clear-centre);
+  z-index: 20;
+  width: min(420px, calc(100% - 32px));
+  transform: translateX(-50%);
+  cursor: default;
+  animation: dropIn 0.3s var(--ease) both;
+}
+.busyCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 10px 10px 12px;
+  border-radius: 999px;
+}
+
+.ring {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  display: grid;
+  place-items: center;
+}
+.ring svg {
+  position: absolute;
+  inset: 0;
+  transform: rotate(-90deg);
+}
+.ringTrack {
+  stroke: var(--fill-3);
+}
+.ringFill {
+  stroke: var(--accent);
+  transition: stroke-dashoffset 0.3s var(--ease);
+}
+.ringSpin svg {
+  animation: spin 1s linear infinite;
+}
+
+.busyText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.busyText strong {
+  font-size: 13.5px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.busyText span {
+  color: var(--text-3);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(270deg);
+  }
+}
+@keyframes dropIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -8px);
+  }
+}
+
+/* ── Zoom bar ──────────────────────────────────────────────────────────── */
+.zoomBar {
+  position: absolute;
+  left: var(--clear-centre);
+  bottom: 16px;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 5px;
+  border-radius: 999px;
+  transform: translateX(-50%);
+  cursor: default;
+  white-space: nowrap;
+  animation: rise 0.35s var(--ease) both;
+}
+
+.zoomLabel {
+  min-width: 54px;
+  height: 32px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-2);
+  font-size: 12.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+.zoomLabel:hover {
+  background: var(--fill-2);
+  color: var(--text);
+}
+
+.sep {
+  width: 1px;
+  height: 20px;
+  margin: 0 4px;
+  background: var(--line-2);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-2);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.pill svg {
+  width: 16px;
+  height: 16px;
+}
+.pill:hover:not(:disabled) {
+  background: var(--fill-2);
+  color: var(--text);
+}
+.pill[aria-pressed='true'] {
+  background: var(--accent-soft);
+  color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent-line);
+}
+.pill:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.holdButton {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  touch-action: none;
+}
+.holdButton:hover {
+  background: var(--fill-2);
+  color: var(--text);
+}
+.holdButton:active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.holdButton svg {
+  width: 17px;
+  height: 17px;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+}
+
+@media (max-width: 899px) {
+  .zoomBar {
+    bottom: 10px;
+  }
+  .compareLabel {
+    display: none;
+  }
+}

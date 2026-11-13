@@ -1,0 +1,116 @@
+/* Application frame: a top bar over three docked columns (tool rail, stage, inspector). */
+
+.app {
+  --top: 64px;
+  --rail-w: 88px;
+  --insp-w: 380px;
+  --bottom: 76px;
+
+  position: fixed;
+  inset: 0;
+  display: grid;
+  grid-template-columns: var(--rail-w) minmax(0, 1fr) var(--insp-w);
+  grid-template-rows: var(--top) minmax(0, 1fr);
+  grid-template-areas:
+    'top top top'
+    'rail stage insp';
+  background: var(--bg);
+}
+
+/* Before a photo is open: the welcome screen gets the full width. */
+.empty {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    'top'
+    'stage';
+}
+
+.dropOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  background: var(--scrim);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  pointer-events: none;
+  animation: fade 0.16s ease-out both;
+}
+
+.dropCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 44px 64px;
+  border-radius: var(--radius-xl);
+  border: 2px dashed var(--accent-line);
+  background: var(--surface);
+  box-shadow: var(--shadow-float);
+  text-align: center;
+  animation: pop 0.22s var(--ease) both;
+}
+.dropIcon {
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 8px;
+  border-radius: 18px;
+  background: var(--grad);
+  color: var(--on-grad);
+}
+.dropIcon svg {
+  width: 28px;
+  height: 28px;
+}
+.dropCard strong {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+}
+.dropCard > span:last-child {
+  color: var(--text-2);
+  font-size: 13px;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+@media (max-width: 1180px) {
+  .app {
+    --insp-w: 340px;
+    --rail-w: 80px;
+  }
+}
+
+/* Phones and small tablets: stage on top, the tools as a dock, then the controls. */
+@media (max-width: 899px) {
+  .app {
+    --top: auto;
+    --bottom: 64px;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto minmax(0, 46%);
+    grid-template-areas:
+      'top'
+      'stage'
+      'rail'
+      'insp';
+  }
+  .empty {
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-areas:
+      'top'
+      'stage';
+  }
+}
