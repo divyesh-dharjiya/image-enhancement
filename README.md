@@ -1,5 +1,7 @@
 # Mitakshi: AI Photo Studio
 
+**Live demo:** https://image-enhancement-liard.vercel.app
+
 Mitakshi is an AI photo enhancer that runs **entirely in the browser** on the user's own GPU. Photos are never uploaded, so there are no server or API costs, no queues and no watermarks. It is built with Next.js and React and can be exported as a static site that deploys anywhere.
 
 ## Run it
