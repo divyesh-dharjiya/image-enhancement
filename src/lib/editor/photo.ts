@@ -54,7 +54,7 @@ export async function setWork(bmp: ImageBitmap, remember = true, geometric?: boo
   if (useEditor.getState().look.bg !== 'none') void ensureMatte();
 }
 
-/** Quick scan that picks sensible defaults for this photo (faces, black & white). Output size starts at Original. */
+/** Quick scan that picks sensible defaults for this photo (faces). Output size starts at 4× Ultra (capped at 16 MP). */
 export async function scanPhoto() {
   const original = useEditor.getState().original;
   if (!original) return;
@@ -64,9 +64,11 @@ export async function scanPhoto() {
     if (useEditor.getState().original !== original) return;
     markCached(['detector']);
     useEditor.setState((s) => ({
-      scan: { faces: r.faces, grayscale: r.grayscale },
-      opts: { ...s.opts, faces: r.faces > 0 && !r.grayscale, colorize: r.grayscale, scale: 1 },
+      scan: { faces: r.faces },
+      opts: { ...s.opts, faces: r.faces > 0, scale: 4 },
     }));
+    // The face engine takes about a minute to load into the GPU after a page load: start now, while the photo is being looked at.
+    if (r.faces > 0 && useEditor.getState().cached.includes('restorer')) getAI().warm('restorer');
   } catch (e) {
     console.warn('scan failed', e);
   }

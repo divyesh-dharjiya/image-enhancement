@@ -1,7 +1,7 @@
 {
   "name": "Mitakshi: AI Photo Enhancer",
   "short_name": "Mitakshi",
-  "description": "Face restoration, 4× HD upscaling, colorization, Magic Eraser, AI backgrounds and batch enhancement, privately on your device.",
+  "description": "Face restoration, 4× HD upscaling, AI backgrounds and batch enhancement, privately on your device.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

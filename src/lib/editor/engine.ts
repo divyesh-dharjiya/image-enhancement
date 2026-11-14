@@ -35,11 +35,4 @@ export async function withRecovery<T>(job: (safe: boolean) => Promise<T>): Promi
   }
 }
 
-/** Delete the large engines stored on this device. */
-export async function deleteEngines() {
-  await getAI().clearModels();
-  useEditor.setState({ cached: [] });
-  toast('AI engines deleted from this device.', 'ok');
-}
-
 export const cancelJob = () => getAI().cancel();

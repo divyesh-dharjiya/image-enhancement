@@ -22,7 +22,6 @@ export function BatchModal() {
   const running = useEditor((s) => s.batchRunning);
   const scale = useEditor((s) => s.batchScale);
   const faces = useEditor((s) => s.batchFaces);
-  const color = useEditor((s) => s.batchColor);
   if (!open) return null;
 
   const done = items.filter((i) => i.status === 'done').length;
@@ -44,10 +43,7 @@ export function BatchModal() {
 
         <div className={styles.options}>
           <div className={styles.optionCard}>
-            <Switch label="Restore faces" checked={faces} disabled={running} onChange={(batchFaces) => useEditor.setState(batchFaces ? { batchFaces, batchColor: false } : { batchFaces })} />
-          </div>
-          <div className={styles.optionCard}>
-            <Switch label="Auto-colorize B&W" checked={color} disabled={running} onChange={(batchColor) => useEditor.setState(batchColor ? { batchColor, batchFaces: false } : { batchColor })} />
+            <Switch label="Restore faces" checked={faces} disabled={running} onChange={(batchFaces) => useEditor.setState({ batchFaces })} />
           </div>
           <Segmented
             label="Output size"

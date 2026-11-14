@@ -13,7 +13,7 @@ const head = Inter({ subsets: ['latin'], weight: ['600', '700', '800'], variable
 export const metadata: Metadata = {
   title: `${BRAND.name} · ${BRAND.tagline}`,
   description:
-    'Restore photos privately on your device: face restoration, 4× HD upscaling, colorization, one-tap Auto fix, crop, AI backgrounds and batch processing.',
+    'Restore photos privately on your device: face restoration, 4× HD upscaling, one-tap Auto fix, crop, AI backgrounds and batch processing.',
   applicationName: BRAND.name,
   manifest: '/manifest.webmanifest',
   icons: { icon: '/icon.svg', apple: '/icon.svg' },

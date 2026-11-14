@@ -20,7 +20,6 @@ export interface Notice {
 
 export interface Scan {
   faces: number;
-  grayscale: boolean;
 }
 
 export interface Mask {
@@ -69,6 +68,8 @@ export interface EditorState {
   historyDepth: number;
   scan: Scan | null;
   opts: EnhanceOptions;
+  /** AI Enhance also sets light and colour for the photo (the same as the Auto button). */
+  autoEdit: boolean;
   faces: FaceState | null;
   fidelity: number;
   look: Look;
@@ -88,7 +89,6 @@ export interface EditorState {
   batchOpen: boolean;
   batchScale: 1 | 2 | 4;
   batchFaces: boolean;
-  batchColor: boolean;
   batchItems: BatchItem[];
   batchRunning: boolean;
   dragging: boolean;
@@ -102,7 +102,8 @@ export const useEditor = create<EditorState>()(() => ({
   preview: null,
   historyDepth: 0,
   scan: null,
-  opts: { scale: 1, faces: true, colorize: false },
+  opts: { scale: 4, faces: true },
+  autoEdit: true,
   faces: null,
   fidelity: 0.75,
   look: { ...NEUTRAL },
@@ -119,9 +120,8 @@ export const useEditor = create<EditorState>()(() => ({
   exFormat: 'image/jpeg',
   exQuality: 0.92,
   batchOpen: false,
-  batchScale: 1,
+  batchScale: 4,
   batchFaces: true,
-  batchColor: false,
   batchItems: [],
   batchRunning: false,
   dragging: false,

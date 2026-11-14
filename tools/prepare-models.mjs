@@ -1,8 +1,8 @@
 // Re-downloads the self-hosted models into public/models from their original sources:
 //   • YuNet face detector (OpenCV Zoo, MIT)            – via FaceFusion's mirror
 //   • MODNet portrait matting fp16 (Apache-2.0)        – Xenova/modnet
-// The 4× upscaler (Real-ESRGAN General x4v3, BSD-3-Clause) is committed, rebuilt by tools/build-sr.mjs from
-// tools/source. The face (GPEN) and colour (DDColor) engines are downloaded by the app on first use.
+// The 4× upscaler (Real-ESRGAN x4plus, BSD-3-Clause) is committed as public/models/esrgan_x4plus_rgba.onnx; rebuild it
+// with tools/build-sr.mjs (see its header). The face engine (CodeFormer) is downloaded by the app on first use.
 // Run:  node tools/prepare-models.mjs
 import { mkdir, stat, writeFile } from 'node:fs/promises';
 

@@ -30,8 +30,11 @@ export function EnhancePanel() {
   const opts = useEditor((s) => s.opts);
   const faceCount = useEditor((s) => s.faces?.faces.length ?? 0);
   const fidelity = useEditor((s) => s.fidelity);
+  const autoEdit = useEditor((s) => s.autoEdit);
   const cached = useEditor((s) => s.cached);
   const hasPhoto = work !== null;
+  // Something was done to the photo (Undo has a step): offer Enhance again and the way back.
+  const edited = useEditor((s) => s.historyDepth > 0);
   const slow = !!work && opts.scale > 1 && (work.width * work.height) / 1e6 > 2 && backend !== 'webgpu';
 
   const setOpts = (patch: Partial<typeof opts>) => useEditor.setState((s) => ({ opts: { ...s.opts, ...patch } }));
@@ -48,31 +51,17 @@ export function EnhancePanel() {
     resultLabel = `${fmtSize(ow, oh)} · ${fmtMP(ow, oh)}`;
     const need = modelsFor(opts).filter((m) => MODELS[m].large && !cached.includes(m));
     const bytes = need.reduce((sum, m) => sum + modelBytes(m), 0);
-    downloadLabel = bytes ? `${fmtMB(bytes)} of AI engines on first run (saved on this device)` : 'All required engines are on this device';
+    downloadLabel = bytes ? `${fmtMB(bytes)} one-time download, then works offline` : 'Ready offline';
   }
 
   return (
     <div className={styles.stack}>
-      <div className={styles.badges}>
-        <Badge tone={backend === 'webgpu' ? 'ok' : backend ? 'warn' : 'default'}>
-          {backend === 'webgpu' ? 'AI engine · GPU' : backend ? 'AI engine · CPU (slower)' : 'AI engine · starting…'}
-        </Badge>
-        <Badge tone="accent">Private</Badge>
-      </div>
-
-      <Button variant="primary" size="lg" block icon={Sparkles} disabled={!hasPhoto || busy} onClick={() => void runEnhance()}>
-        AI Enhance
-      </Button>
-
       {hasPhoto && (
         <div className={styles.chips}>
           {scan ? (
             <>
               <span className={styles.chip}>
                 Faces <b>{scan.faces || 'none'}</b>
-              </span>
-              <span className={styles.chip}>
-                Type <b>{scan.grayscale ? 'Black & white' : 'Colour'}</b>
               </span>
               {original && (
                 <span className={styles.chip}>
@@ -86,20 +75,21 @@ export function EnhancePanel() {
         </div>
       )}
 
-      <Section title="What the AI does" description="One step at a time keeps it fast and the downloads small. Run Enhance again for the other.">
+      {/* The choices come first and the button after them, so it always runs what is shown above it. */}
+      <Section title="What to fix">
         <Switch
           label="Restore faces"
-          description="Rebuilds eyes, skin and hair detail, one face at a time"
+          description="Sharp eyes, skin and hair"
           checked={opts.faces}
           disabled={busy}
-          onChange={(faces) => setOpts(faces ? { faces, colorize: false } : { faces })}
+          onChange={(faces) => setOpts({ faces })}
         />
         <Switch
-          label="Colorize old photo"
-          description="Adds natural colour to black & white and sepia prints"
-          checked={opts.colorize}
+          label="Auto edit"
+          description="Sets light and colour for this photo"
+          checked={autoEdit}
           disabled={busy}
-          onChange={(colorize) => setOpts(colorize ? { colorize, faces: false } : { colorize })}
+          onChange={(on) => useEditor.setState({ autoEdit: on })}
         />
       </Section>
 
@@ -112,16 +102,26 @@ export function EnhancePanel() {
           disabled={busy}
           onChange={(v) => setOpts({ scale: Number(v) as 1 | 2 | 4 })}
         />
-        {slow && <Notice tone="warn">This photo is already large and this browser has no GPU acceleration: upscaling takes minutes. Original size is much faster.</Notice>}
-        {work && (
-          <div className={styles.info}>
-            <div>
-              Result <b>{resultLabel}</b>
-            </div>
-            <div>{downloadLabel}</div>
-          </div>
-        )}
       </Section>
+
+      <Button variant="primary" size="lg" block icon={Sparkles} disabled={!hasPhoto || busy || (!opts.faces && opts.scale === 1 && !autoEdit)} onClick={() => void runEnhance()}>
+        {edited ? 'Enhance again' : 'AI Enhance'}
+      </Button>
+      {work && (
+        <div className={styles.info}>
+          <div>
+            Result <b>{resultLabel}</b>
+          </div>
+          <div>{downloadLabel}</div>
+          <div className={styles.engine}>
+            <Badge tone={backend === 'webgpu' ? 'ok' : backend ? 'warn' : 'default'}>
+              {backend === 'webgpu' ? 'Runs on your GPU' : backend ? 'Runs on your CPU (slower)' : 'Starting the AI engine…'}
+            </Badge>
+            <Badge tone="accent">Private</Badge>
+          </div>
+        </div>
+      )}
+      {slow && <Notice tone="warn">This photo is already large and this browser has no GPU acceleration: upscaling takes minutes. Original size is much faster.</Notice>}
 
       {faceCount > 0 && (
         <Section title="Face enhancement" description="Blend between the natural photo and the restored faces.">
@@ -140,7 +140,7 @@ export function EnhancePanel() {
 
       <FaceList />
 
-      {work && work !== original && (
+      {edited && (
         <Button variant="secondary" icon={RotateCcw} block onClick={() => void revert()} disabled={busy}>
           Revert to the original photo
         </Button>

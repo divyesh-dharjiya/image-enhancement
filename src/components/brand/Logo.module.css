@@ -38,3 +38,10 @@
     display: none;
   }
 }
+
+/* Phones with a photo open: the top bar needs the room, the mark alone carries the brand. */
+@media (max-width: 420px) {
+  .words {
+    display: none;
+  }
+}

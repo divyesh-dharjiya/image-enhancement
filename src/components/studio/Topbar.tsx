@@ -29,10 +29,15 @@ export function Topbar() {
       )}
 
       <div className={styles.right}>
-        <Button variant={autoOn ? 'primary' : 'secondary'} icon={WandSparkles} className={styles.compact} onClick={autoEnhance} disabled={!work || busy} aria-pressed={autoOn} aria-label={autoOn ? 'Auto fix is on: click to reset every adjustment' : 'Auto fix: set light and colour for this photo'} title={autoOn ? 'Auto fix is on: click again to reset' : 'Auto fix: set light and colour for this photo'}>
-          <span className={styles.label}>{autoOn ? 'Auto on' : 'Auto'}</span>
-        </Button>
-        <IconButton icon={Undo2} label="Undo (Ctrl+Z)" onClick={() => void undo()} disabled={!historyDepth || busy} />
+        {/* Editing buttons appear with a photo: before that they were a row of disabled controls that crowded the logo on phones. */}
+        {work && (
+          <>
+            <Button variant={autoOn ? 'primary' : 'secondary'} icon={WandSparkles} className={styles.compact} onClick={autoEnhance} disabled={busy} aria-pressed={autoOn} aria-label={autoOn ? 'Auto fix is on: click to reset every adjustment' : 'Auto fix: set light and colour for this photo'} title={autoOn ? 'Auto fix is on: click again to reset' : 'Auto fix: set light and colour for this photo'}>
+              <span className={styles.label}>{autoOn ? 'Auto on' : 'Auto'}</span>
+            </Button>
+            <IconButton icon={Undo2} label="Undo (Ctrl+Z)" onClick={() => void undo()} disabled={!historyDepth || busy} />
+          </>
+        )}
         <ThemeToggle />
         <span className={styles.divider} aria-hidden />
         <Button
@@ -57,17 +62,19 @@ export function Topbar() {
         >
           <span className={styles.label}>Batch</span>
         </Button>
-        <Button
-          variant="primary"
-          icon={Download}
-          className={styles.compact}
-          onClick={() => void downloadImage()}
-          disabled={!work || busy}
-          aria-label="Download full resolution (Ctrl+S)"
-          title="Download full resolution (Ctrl+S)"
-        >
-          <span className={styles.label}>Download</span>
-        </Button>
+        {work && (
+          <Button
+            variant="primary"
+            icon={Download}
+            className={styles.compact}
+            onClick={() => void downloadImage()}
+            disabled={busy}
+            aria-label="Download full resolution (Ctrl+S)"
+            title="Download full resolution (Ctrl+S)"
+          >
+            <span className={styles.label}>Download</span>
+          </Button>
+        )}
       </div>
     </header>
   );

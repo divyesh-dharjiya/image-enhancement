@@ -1,16 +1,14 @@
 'use client';
 
-import { Columns2, Copy, Download, Share2, Trash2 } from 'lucide-react';
+import { Columns2, Copy, Download, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Notice } from '@/components/ui/Notice';
 import { Section } from '@/components/ui/Section';
 import { Segmented } from '@/components/ui/Segmented';
 import { Slider } from '@/components/ui/Slider';
-import { MODELS, modelBytes, type ModelKey } from '@/lib/ai/registry';
-import { fmtMB, fmtMP, fmtSize } from '@/lib/format';
+import { fmtMP, fmtSize } from '@/lib/format';
 import {
   copyImage,
-  deleteEngines,
   downloadComparison,
   downloadImage,
   exportType,
@@ -26,15 +24,12 @@ const FORMATS: { value: ExportFormat; label: string }[] = [
   { value: 'image/webp', label: 'WebP' },
 ];
 
-const LARGE_MODELS = (Object.keys(MODELS) as ModelKey[]).filter((k) => MODELS[k].large);
-
-/** Output format, quality and the sharing options, plus control over the stored AI engines. */
+/** Output format, quality and the sharing options. */
 export function ExportPanel() {
   const exFormat = useEditor((s) => s.exFormat);
   const exQuality = useEditor((s) => s.exQuality);
   const work = useEditor((s) => s.work);
   const busy = useEditor((s) => s.busy !== null);
-  const cached = useEditor((s) => s.cached);
   const hasPhoto = work !== null;
   // Read the export type from the same state that renders it, so the label never disagrees with the file.
   const type = exportType();
@@ -86,35 +81,7 @@ export function ExportPanel() {
         </Button>
       </Section>
 
-      <Section title="On-device storage" description="The large AI engines are saved here after first use, so they load instantly next time.">
-        <div className={styles.storage}>
-          {LARGE_MODELS.map((k) => {
-            const has = cached.includes(k);
-            return (
-              <div key={k} className={styles.storageRow}>
-                <span>
-                  <b>{MODELS[k].label}</b>
-                  <small>{fmtMB(modelBytes(k))}</small>
-                </span>
-                <span className={has ? styles.saved : styles.notSaved}>{has ? 'Saved' : 'Not downloaded'}</span>
-              </div>
-            );
-          })}
-        </div>
-        <Button
-          variant="danger"
-          icon={Trash2}
-          block
-          disabled={busy}
-          onClick={() => {
-            if (window.confirm('Delete the downloaded AI engines from this device? They download again when needed.')) void deleteEngines();
-          }}
-        >
-          Delete downloaded engines
-        </Button>
-      </Section>
-
-      <Notice>Photos never leave this device. Only the engines are stored locally.</Notice>
+      <Notice>Photos never leave this device.</Notice>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import type { LucideIcon } from 'lucide-react';
-import { ArrowRight, ChevronsLeftRight, Crop, Download, ImagePlus, Images, Layers, Palette, ScanFace, ShieldCheck, SlidersHorizontal, Sparkles, Undo2, Wand2, WifiOff, Zap } from 'lucide-react';
+import { ArrowRight, ChevronsLeftRight, Crop, Download, ImagePlus, Images, Layers, ScanFace, ShieldCheck, SlidersHorizontal, Sparkles, Undo2, Wand2, WifiOff, Zap } from 'lucide-react';
 import { pickBatchPhotos, pickPhoto } from '@/lib/editor';
 import { cn } from '@/lib/cn';
 import styles from './Hero.module.css';
@@ -9,7 +9,6 @@ import styles from './Hero.module.css';
 const FEATURES: { icon: LucideIcon; title: string; text: string; tag: string }[] = [
   { icon: Wand2, title: 'Auto fix', text: 'One tap sets the light and colour that suit the photo.', tag: '1 tap' },
   { icon: ScanFace, title: 'Face restore', text: 'Sharp eyes, skin and hair, even on blurry shots.', tag: 'AI' },
-  { icon: Palette, title: 'Colorize', text: 'Natural colour for old black & white prints.', tag: 'AI' },
   { icon: Sparkles, title: 'HD upscale', text: 'Up to 4× with fine detail rebuilt.', tag: 'AI' },
   { icon: Layers, title: 'Background', text: 'Blur it, recolour it or cut the subject out.', tag: 'AI' },
   { icon: Crop, title: 'Crop and rotate', text: 'Frame the photo just right, then undo freely.', tag: 'Free' },
@@ -55,7 +54,7 @@ export function Hero() {
               Restore blurry photos <span className="gradText">with AI</span>
             </h1>
 
-            <p className={styles.lead}>Sharpen faces, upscale to HD, bring old black &amp; white prints to colour and change backgrounds. Free, with no watermark, and your photos never leave your device.</p>
+            <p className={styles.lead}>Sharpen faces, upscale to HD, change backgrounds. Free, with no watermark, and your photos never leave your device.</p>
 
             <div className={styles.actions}>
               <button type="button" className={styles.cta} onClick={pickPhoto}>
